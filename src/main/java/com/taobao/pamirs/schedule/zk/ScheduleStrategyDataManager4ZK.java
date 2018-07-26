@@ -19,6 +19,11 @@ import com.taobao.pamirs.schedule.strategy.ScheduleStrategy;
 import com.taobao.pamirs.schedule.strategy.ScheduleStrategyRunntime;
 import com.taobao.pamirs.schedule.strategy.TBScheduleManagerFactory;
 
+/**
+ * 负责/app/factory   /app/strategy   节点数据的维护
+ * @author Dorae
+ *
+ */
 public class ScheduleStrategyDataManager4ZK {
 
     private ZKManager zkManager;
@@ -41,6 +46,12 @@ public class ScheduleStrategyDataManager4ZK {
         }
     }
 
+    /**
+     * 加载strategy信息
+     * @param strategyName
+     * @return
+     * @throws Exception
+     */
     public ScheduleStrategy loadStrategy(String strategyName) throws Exception {
         String zkPath = this.PATH_Strategy + "/" + strategyName;
         if (this.getZooKeeper().exists(zkPath, false) == null) {
@@ -145,6 +156,7 @@ public class ScheduleStrategyDataManager4ZK {
                     }
                 }
             }
+            // 如果一个factory不在任何strategy下注册，那么加入待清除集合？
             if (isFind == false) {// 清除原来注册的Factory
                 String zkPath = this.PATH_Strategy + "/" + scheduleStrategy.getStrategyName() + "/" + managerFactory.getUuid();
                 if (this.getZooKeeper().exists(zkPath, false) != null) {
@@ -217,6 +229,12 @@ public class ScheduleStrategyDataManager4ZK {
         return result;
     }
 
+    /**
+     * 根据factoryUUID找到其已经注册的strategy，返回runtime信息
+     * @param managerFactoryUUID
+     * @return
+     * @throws Exception
+     */
     public List<ScheduleStrategyRunntime> loadAllScheduleStrategyRunntimeByUUID(String managerFactoryUUID) throws Exception {
         List<ScheduleStrategyRunntime> result = new ArrayList<ScheduleStrategyRunntime>();
         String zkPath = this.PATH_Strategy;

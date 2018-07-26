@@ -20,6 +20,11 @@ import org.apache.zookeeper.server.auth.DigestAuthenticationProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 负责与zk间的连接，数据交换
+ * @author Dorae
+ *
+ */
 public class ZKManager {
 
     private static transient Logger log = LoggerFactory.getLogger(ZKManager.class);

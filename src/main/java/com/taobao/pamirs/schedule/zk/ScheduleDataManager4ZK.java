@@ -40,6 +40,11 @@ import com.taobao.pamirs.schedule.taskmanager.ScheduleTaskItem;
 import com.taobao.pamirs.schedule.taskmanager.ScheduleTaskType;
 import com.taobao.pamirs.schedule.taskmanager.ScheduleTaskTypeRunningInfo;
 
+/**
+ * 负责/app/baseTaskType及其子节点的数据模型维护
+ * @author Dorae
+ *
+ */
 public class ScheduleDataManager4ZK implements IScheduleDataManager {
     private static transient Logger log = LoggerFactory.getLogger(ScheduleDataManager4ZK.class);
     private Gson gson;
@@ -126,7 +131,7 @@ public class ScheduleDataManager4ZK implements IScheduleDataManager {
         }
         // 创建目录
         this.getZooKeeper().create(zkPath, null, this.zkManager.getAcl(), CreateMode.PERSISTENT);
-        // 创建静态任务
+        // 创建静态任务，创建taskItem的节点结构
         this.createScheduleTaskItem(baseTaskType, ownSign, this.loadTaskTypeBaseInfo(baseTaskType).getTaskItems());
         // 标记信息初始化成功
         setInitialRunningInfoSucuss(baseTaskType, taskType, uuid);
@@ -180,7 +185,7 @@ public class ScheduleDataManager4ZK implements IScheduleDataManager {
     }
 
     /**
-     * 根据基础配置里面的任务项来创建各个域里面的任务项
+     * 根据基础配置里面的任务项来创建各个域里面的任务项，创建taskItem的子节点
      * 
      * @param baseTaskType
      * @param ownSign
@@ -693,10 +698,12 @@ public class ScheduleDataManager4ZK implements IScheduleDataManager {
         String NO_SERVER_DEAL = "没有分配到服务器";
         for (int i = 0; i < children.size(); i++) {
             String name = children.get(i);
+            // 保证服务器符合初始化时的划分规则
             if (point < taskServerList.size() && i >= count + taskNums[point]) {
                 count = count + taskNums[point];
                 point = point + 1;
             }
+            // 决定当前任务能否分到服务器
             String serverName = NO_SERVER_DEAL;
             if (point < taskServerList.size()) {
                 serverName = taskServerList.get(point);
@@ -705,22 +712,26 @@ public class ScheduleDataManager4ZK implements IScheduleDataManager {
             byte[] reqServerValue = this.getZooKeeper().getData(zkPath + "/" + name + "/req_server", false, null);
 
             if (curServerValue == null || new String(curServerValue).equals(NO_SERVER_DEAL)) {
+            	// 当前任务之前没有分到服务器
                 this.getZooKeeper().setData(zkPath + "/" + name + "/cur_server", serverName.getBytes(), -1);
                 this.getZooKeeper().setData(zkPath + "/" + name + "/req_server", null, -1);
             } else if (new String(curServerValue).equals(serverName) == true && reqServerValue == null) {
-                // 不需要做任何事情
+                // 当前任务的服务器和这个相同，并且没有等待的服务器队列，不需要做任何事情
                 unModifyCount = unModifyCount + 1;
             } else {
+            	// 否则，当前任务有正在进行的server，并且和这次划分的不同，将这次的服务器加入等待队列
                 this.getZooKeeper().setData(zkPath + "/" + name + "/req_server", serverName.getBytes(), -1);
             }
         }
 
         if (unModifyCount < children.size()) { // 设置需要所有的服务器重新装载任务
+        	// 服务器划分发生了变化，需要重新划分
             log.info("设置需要所有的服务器重新装载任务:updateReloadTaskItemFlag......" + taskType + "  ,currentUuid " + currentUuid);
 
             this.updateReloadTaskItemFlag(taskType);
         }
         if (log.isDebugEnabled()) {
+        	// 打印所有taskItem的状态
             StringBuffer buffer = new StringBuffer();
             for (ScheduleTaskItem taskItem : this.loadAllTaskItem(taskType)) {
                 buffer.append("\n").append(taskItem.toString());

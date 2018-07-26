@@ -21,7 +21,7 @@ public class ScheduleStrategyRunntime {
     private String taskParameter;
 
     /**
-     * 需要的任务数量
+     * 需要被分配的任务数量
      */
     int requestNum;
     /**

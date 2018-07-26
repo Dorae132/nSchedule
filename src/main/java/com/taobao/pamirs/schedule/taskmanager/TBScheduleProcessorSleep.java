@@ -48,6 +48,9 @@ class TBScheduleProcessorSleep<T> implements IScheduleProcessor, Runnable {
     final Object lockVersionObject = new Object();
     final Object lockRunningList = new Object();
 
+    /**
+     * 任务队列，selectTasks产生
+     */
     protected List<T> taskList = new CopyOnWriteArrayList<T>();
 
     /**

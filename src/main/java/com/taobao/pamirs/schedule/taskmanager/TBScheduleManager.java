@@ -19,9 +19,11 @@ import com.taobao.pamirs.schedule.strategy.IStrategyTask;
 import com.taobao.pamirs.schedule.strategy.TBScheduleManagerFactory;
 
 /**
- * 1、任务调度分配器的目标： 让所有的任务不重复，不遗漏的被快速处理。 2、一个Manager只管理一种任务类型的一组工作线程。
+ * 1、任务调度分配器的目标： 让所有的任务不重复，不遗漏的被快速处理。
+ * 2、一个Manager只管理一种任务类型的一组工作线程。
  * 3、在一个JVM里面可能存在多个处理相同任务类型的Manager，也可能存在处理不同任务类型的Manager。
- * 4、在不同的JVM里面可以存在处理相同任务的Manager 5、调度的Manager可以动态的随意增加和停止
+ * 4、在不同的JVM里面可以存在处理相同任务的Manager 
+ * 5、调度的Manager可以动态的随意增加和停止
  * 
  * 主要的职责： 1、定时向集中的数据配置中心更新当前调度服务器的心跳状态
  * 2、向数据配置中心获取所有服务器的状态来重新计算任务的分配。这么做的目标是避免集中任务调度中心的单点问题。
@@ -53,7 +55,7 @@ abstract class TBScheduleManager implements IStrategyTask {
      */
     protected ScheduleServer currenScheduleServer;
     /**
-     * 队列处理器
+     * 队列处理器，对应的springbean
      */
     IScheduleTaskDeal taskDealBean;
 
@@ -404,6 +406,7 @@ class HeartBeatTimerTask extends java.util.TimerTask {
     public void run() {
         try {
             Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+            // 更新服务器的信息
             manager.refreshScheduleServerInfo();
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);

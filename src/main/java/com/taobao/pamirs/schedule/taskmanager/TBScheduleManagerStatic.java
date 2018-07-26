@@ -180,7 +180,9 @@ public class TBScheduleManagerStatic extends TBScheduleManager {
      * @throws Exception
      */
     public void assignScheduleTask() throws Exception {
+    	// 1 删除过期的task$TEST/server节点下过期的服务器
         scheduleCenter.clearExpireScheduleServer(this.currenScheduleServer.getTaskType(), this.taskTypeInfo.getJudgeDeadInterval());
+        // 2 获取当前存活的server
         List<String> serverList = scheduleCenter.loadScheduleServerNames(this.currenScheduleServer.getTaskType());
 
         if (scheduleCenter.isLeader(this.currenScheduleServer.getUuid(), serverList) == false) {
@@ -189,11 +191,12 @@ public class TBScheduleManagerStatic extends TBScheduleManager {
             }
             return;
         }
-        // 设置初始化成功标准，避免在leader转换的时候，新增的线程组初始化失败
+        // 3 设置初始化成功标准，避免在leader转换的时候，新增的线程组初始化失败
         scheduleCenter.setInitialRunningInfoSucuss(this.currenScheduleServer.getBaseTaskType(), this.currenScheduleServer.getTaskType(), this.currenScheduleServer.getUuid());
+        // 4 清除taskItem1/cur_server节点数据，如果该服务器不再存活了
         scheduleCenter.clearTaskItem(this.currenScheduleServer.getTaskType(), serverList);
-        scheduleCenter
-                .assignTaskItem(this.currenScheduleServer.getTaskType(), this.currenScheduleServer.getUuid(), this.taskTypeInfo.getMaxTaskItemsOfOneThreadGroup(), serverList);
+        // 5 
+        scheduleCenter.assignTaskItem(this.currenScheduleServer.getTaskType(), this.currenScheduleServer.getUuid(), this.taskTypeInfo.getMaxTaskItemsOfOneThreadGroup(), serverList);
     }
 
     /**

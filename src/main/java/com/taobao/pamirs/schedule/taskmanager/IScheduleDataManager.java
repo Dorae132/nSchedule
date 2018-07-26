@@ -13,6 +13,11 @@ import com.taobao.pamirs.schedule.TaskItemDefine;
  * @author xuannan
  * 
  */
+/**
+ * 负责/app/baseTaskType及其子节点所有数据模型的维护
+ * @author Dorae
+ *
+ */
 public interface IScheduleDataManager {
     public long getSystemTime();
 
@@ -89,6 +94,12 @@ public interface IScheduleDataManager {
      */
     public List<ScheduleServer> selectAllValidScheduleServer(String taskType) throws Exception;
 
+    /**
+     * 获取task1$TEST下的所有server
+     * @param taskType
+     * @return
+     * @throws Exception
+     */
     public List<String> loadScheduleServerNames(String taskType) throws Exception;
 
     /**
@@ -125,7 +136,7 @@ public interface IScheduleDataManager {
     public void unRegisterScheduleServer(String taskType, String serverUUID) throws Exception;
 
     /**
-     * 清除已经过期的OWN_SIGN的自动生成的数据
+     * 清除已经过期的OWN_SIGN的自动生成的数据，删除过期的Task$TEST节点，如果其taskItem节点超过1天没有活动，认为过期
      * 
      * @param taskType
      *            任务类型

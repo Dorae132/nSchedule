@@ -57,6 +57,7 @@ public class TBScheduleManagerFactory implements ApplicationContextAware {
     private IScheduleDataManager scheduleDataManager;
     private ScheduleStrategyDataManager4ZK scheduleStrategyManager;
 
+    // strategyName -> IStrategyTask
     private Map<String, List<IStrategyTask>> managerMap = new ConcurrentHashMap<String, List<IStrategyTask>>();
 
     private ApplicationContext applicationcontext;
@@ -210,6 +211,7 @@ public class TBScheduleManagerFactory implements ApplicationContextAware {
      */
     public void assignScheduleServer() throws Exception {
         for (ScheduleStrategyRunntime run : this.scheduleStrategyManager.loadAllScheduleStrategyRunntimeByUUID(this.uuid)) {
+        	// 找到对应strategy的所有runtime信息，该信息存在/strategy1/factoryUUID节点中
             List<ScheduleStrategyRunntime> factoryList = this.scheduleStrategyManager.loadAllScheduleStrategyRunntimeByTaskType(run.getStrategyName());
             if (factoryList.size() == 0 || this.isLeader(this.uuid, factoryList) == false) {
                 continue;
@@ -219,7 +221,7 @@ public class TBScheduleManagerFactory implements ApplicationContextAware {
             int[] nums = ScheduleUtil.assignTaskNumber(factoryList.size(), scheduleStrategy.getAssignNum(), scheduleStrategy.getNumOfSingleServer());
             for (int i = 0; i < factoryList.size(); i++) {
                 ScheduleStrategyRunntime factory = factoryList.get(i);
-                // 更新请求的服务器数量
+                // 更新请求的服务器数量，更新scheduleStrategyRunTime的data
                 this.scheduleStrategyManager.updateStrategyRunntimeReqestNum(run.getStrategyName(), factory.getUuid(), nums[i]);
             }
         }
@@ -436,6 +438,11 @@ public class TBScheduleManagerFactory implements ApplicationContextAware {
     }
 }
 
+/**
+ * zk链接失败，重启factory
+ * @author Dorae
+ *
+ */
 class ManagerFactoryTimerTask extends java.util.TimerTask {
     private static transient Logger log = LoggerFactory.getLogger(ManagerFactoryTimerTask.class);
     TBScheduleManagerFactory factory;

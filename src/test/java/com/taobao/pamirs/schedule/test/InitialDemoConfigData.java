@@ -1,5 +1,7 @@
 package com.taobao.pamirs.schedule.test;
 
+import java.util.concurrent.TimeUnit;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,10 +63,11 @@ public class InitialDemoConfigData extends UnitilsJUnit4 {
         strategy.setTaskParameter("中国");
 
         strategy.setNumOfSingleServer(1);
-        strategy.setAssignNum(10);
+        strategy.setAssignNum(5);
         strategy.setIPList("127.0.0.1".split(","));
         this.scheduleManagerFactory.getScheduleStrategyManager().createScheduleStrategy(strategy);
         log.info("创建调度策略成功:" + strategy.toString());
 
+        TimeUnit.DAYS.sleep(1);
     }
 }

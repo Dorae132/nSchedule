@@ -406,7 +406,7 @@ class HeartBeatTimerTask extends java.util.TimerTask {
     public void run() {
         try {
             Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-            // 更新服务器的信息
+            // 更新服务器的信息，这里一旦server信息或者item划分信息发生变动，都会触发任务重新分配
             manager.refreshScheduleServerInfo();
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);

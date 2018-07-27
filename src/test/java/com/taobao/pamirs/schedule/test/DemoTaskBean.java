@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,7 @@ public class DemoTaskBean implements IScheduleTaskDealSingle<Long> {
     public boolean execute(Long task, String ownSign) throws Exception {
         Thread.sleep(50);
         log.info("处理任务[" + ownSign + "]:" + task);
+        TimeUnit.SECONDS.sleep(2);
         return true;
     }
 }

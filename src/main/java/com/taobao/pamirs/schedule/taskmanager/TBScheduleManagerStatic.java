@@ -27,6 +27,7 @@ public class TBScheduleManagerStatic extends TBScheduleManager {
     }
 
     public void initialRunningInfo() throws Exception {
+    	// 清除过期server
         scheduleCenter.clearExpireScheduleServer(this.currenScheduleServer.getTaskType(), this.taskTypeInfo.getJudgeDeadInterval());
         List<String> list = scheduleCenter.loadScheduleServerNames(this.currenScheduleServer.getTaskType());
         if (scheduleCenter.isLeader(this.currenScheduleServer.getUuid(), list)) {
@@ -51,6 +52,7 @@ public class TBScheduleManagerStatic extends TBScheduleManager {
                         // isRuntimeInfoInitial);
                         try {
                             initialRunningInfo();
+                            // 判断重新的任务划分是否初始化成功
                             isRuntimeInfoInitial = scheduleCenter.isInitialRunningInfoSucuss(currenScheduleServer.getBaseTaskType(), currenScheduleServer.getOwnSign());
                         } catch (Throwable e) {
                             // 忽略初始化的异常
@@ -195,7 +197,7 @@ public class TBScheduleManagerStatic extends TBScheduleManager {
         scheduleCenter.setInitialRunningInfoSucuss(this.currenScheduleServer.getBaseTaskType(), this.currenScheduleServer.getTaskType(), this.currenScheduleServer.getUuid());
         // 4 清除taskItem1/cur_server节点数据，如果该服务器不再存活了
         scheduleCenter.clearTaskItem(this.currenScheduleServer.getTaskType(), serverList);
-        // 5 
+        // 5 重新分配任务
         scheduleCenter.assignTaskItem(this.currenScheduleServer.getTaskType(), this.currenScheduleServer.getUuid(), this.taskTypeInfo.getMaxTaskItemsOfOneThreadGroup(), serverList);
     }
 

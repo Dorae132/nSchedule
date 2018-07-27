@@ -26,6 +26,7 @@ class TBScheduleProcessorSleep<T> implements IScheduleProcessor, Runnable {
 
     private static transient Logger logger = LoggerFactory.getLogger(TBScheduleProcessorSleep.class);
     final LockObject m_lockObject = new LockObject();
+    // ?
     List<Thread> threadList = new CopyOnWriteArrayList<Thread>();
     /**
      * 任务管理器

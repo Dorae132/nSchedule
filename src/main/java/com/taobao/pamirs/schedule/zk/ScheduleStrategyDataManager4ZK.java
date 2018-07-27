@@ -249,6 +249,14 @@ public class ScheduleStrategyDataManager4ZK {
         return result;
     }
 
+    /**
+     * 列出可以处理StrategyName的所有factory
+     * @author Dorae
+     * @date 2018年7月26日22:54:06
+     * @param strategyName
+     * @return
+     * @throws Exception
+     */
     public List<ScheduleStrategyRunntime> loadAllScheduleStrategyRunntimeByTaskType(String strategyName) throws Exception {
         List<ScheduleStrategyRunntime> result = new ArrayList<ScheduleStrategyRunntime>();
         String zkPath = this.PATH_Strategy;

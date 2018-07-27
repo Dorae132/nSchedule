@@ -264,6 +264,14 @@ public interface IScheduleDataManager {
 
     public long updateReloadTaskItemFlag(String taskType) throws Exception;
 
+    /**
+     * 获取重新划分任务的标记
+     * @author Dorae
+     * @date 2018年7月26日17:58:51
+     * @param taskType
+     * @return
+     * @throws Exception
+     */
     public long getReloadTaskItemFlag(String taskType) throws Exception;
 
     /**

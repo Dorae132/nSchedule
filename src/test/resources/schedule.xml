@@ -6,8 +6,8 @@
 		init-method="init">
 		<property name="zkConfig">
            <map>
-              <entry key="zkConnectString" value="localhost:10001" />
-              <entry key="rootPath" value="/taobao-pamirs-schedule/nsb55" />
+              <entry key="zkConnectString" value="10.165.124.129:2181" />
+              <entry key="rootPath" value="/nsb-schedule/nsb6" />
               <entry key="zkSessionTimeout" value="60000" />
               <entry key="userName" value="ScheduleAdmin" />
               <entry key="password" value="password" />

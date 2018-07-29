@@ -18,6 +18,9 @@ public class ScheduleStrategy {
     /**
      * 指定需要执行调度的机器数量,表示该strategy一共会有多少个server（可以在同一台机器）
      */
+    /**
+     * 这里其实是任务项的数量，也即把item划分到几台ScheduleServer上
+     */
     private int assignNum;
 
     private Kind kind;

@@ -313,6 +313,7 @@ abstract class TBScheduleManager implements IStrategyTask {
             if (this.taskDealBean != null) {
                 if (this.taskTypeInfo.getProcessorType() != null && this.taskTypeInfo.getProcessorType().equalsIgnoreCase("NOTSLEEP") == true) {
                     this.taskTypeInfo.setProcessorType("NOTSLEEP");
+                    // 这里存在优化空间
                     this.processor = new TBScheduleProcessorNotSleep(this, taskDealBean, this.statisticsInfo);
                 } else {
                     this.processor = new TBScheduleProcessorSleep(this, taskDealBean, this.statisticsInfo);

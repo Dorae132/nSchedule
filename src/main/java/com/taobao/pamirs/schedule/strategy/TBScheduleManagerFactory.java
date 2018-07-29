@@ -206,6 +206,7 @@ public class TBScheduleManagerFactory implements ApplicationContextAware {
 
     /**
      * 根据策略重新分配调度任务的机器
+     * 这里只有leader才会触发任务的分配
      * 
      * @throws Exception
      */
@@ -259,6 +260,7 @@ public class TBScheduleManagerFactory implements ApplicationContextAware {
             }
             // 不足，增加调度器
             ScheduleStrategy strategy = this.scheduleStrategyManager.loadStrategy(run.getStrategyName());
+            // 因为在这里进行了分配，所以不会导致节点数量超过reqnum
             while (list.size() < run.getRequestNum()) {
                 IStrategyTask result = this.createStrategyTask(strategy);
                 if (null == result) {
